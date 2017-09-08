@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>CS 194-26 Project 1: Images of the Russian Empire</title>
+
+        <link href="css/web.css" rel="stylesheet">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/thumbnail-gallery.css" rel="stylesheet">
+    </head>
+
+    <style>
+
+    </style>
+
+    <body>
+        <div class="container">
+            <div class="col-lg-12">
+                <center >
+                    <br>
+                    <h1 >Project 1: Images of the Russian Empire</h1>
+                    <i>Colorizing the Prokudin-Gorskii photo collection</i>
+                    <h3 class="page-header">Genevieve Tran</h3>
+                    <img src="./write_up/lady.jpg" height="400px">
+                    <hr>
+                </center>
+            </div>
+
+            <div class="col-lg-12">
+                <h2 class="page-header">Goal</h2>
+                <p>Prokudin-Gorskii's glass plate negatives contain the pixel values for red, green, and blue (RGB). 
+                    These plates contain the images of the Russian Empire from the early 1900's. 
+                    The goal of this project is to convert the original negatives into colored images. 
+                    This process involves aligning the three images using Sum of Squared Differences (SSD) and/or 
+                    Normalized Cross-Correlation (NCC). If the size of the image is particularly large, I used the image
+                    pyramid algorithm to recursively find best alignments on smaller versions of the image, updating the search window and
+                    displacement at each step as the image gets larger.
+                    In addition, edge detection is used to further fine-tune the alignment of the negatives (instead of just raw pixels).
+                    After alignment, I performed automatic cropping and white-balancing of teh image.</p>
+                <p><b>Bells and Whistles:</b> Automatic Cropping, Edge Detection for better features and White Balancing</p>
+            </div>
+            <br>
+            <div class="col-lg-12">
+                <h2 class="page-header">Image Alignment</h2>
+                <hr>
+                <center>
+                    <img src="./base_results/emir.jpg" height="300px">
+                    <img src="./base_results/settlers.jpg" height="200px">
+                    <img src="./base_results/kamen.jpg" height="250px">
+                </center>
+                <br>
+                <b>Approach:</b>
+                <p> 
+                    First I attempted implementing the suggested solution on raw pixels of each color channel.
+                    Single scale alignment algorithms are Sum of Squared Differences (SSD) and Normalized Cross-Correlation (NCC). 
+                </p>
+                <p>
+                    Sum of Squared Differences (SSD): minimize sum(sum((image1-image2).^2)), over the displacement values for x and y in range of [-15, 15] between a blue and a red or green channel.
+                </p>
+                <p>
+                    Normalized Cross-Correlation (NCC): maximize (image1./||image1|| and image2./||image2||), over the displacement values for x and y in range of [-15, 15]  between a blue and a red or green channel.
+                </p>
+                    For negatives that were in the TIFF format, a faster search procedure is done using image pyramids. 
+                    An image pyramid represents the image at multiple scales (usually scaled by a factor of 2) and the processing is done 
+                    sequentially starting from the coarsest scale (smallest image) and going down the pyramid, 
+                    updating the offset values with each proceeding layer. At each level, the Normalized Cross-Correlation
+                    is calculated with a window range of int(np.log2(curr_rows or curr_columns)) at the smallest scale and a range of int(np.log2(curr_rows or curr_columns)/2) for every successive layer. 
+                    Curr_rows or curr_columns is also an important distinction as the window for a column displacement should not be the same as the one for a row displacement.
+                    These numbers were chosen analytically as well as through trial and error.
+                    The number of levels was determined through int(round(np.log10(rows))), where rows is the # of rows in the original image.
+                    The idea is that the coarsest level will provide the general location of optimal alignment and each successive level will 
+                    merely update in its vicinity to determine if a more optimal, local position can be found.</p>
+                <p><b>Better Features aka Bells and Whistles 1:</b> In addition to using the image pyramid technique for faster alignment on TIFF images, edge detection is used to enhance the alignment mechanism. 
+                    First transform an image into an images of edges through the Canny edge detection algorithm. That gives a clear contrast outline of the original image. 
+                    Then run the original pyramid algorithm on these new features.</p>
+                </p>
+                <p><center><b>Canny Edge Detection and Pyramid Algorithm</b></center></p>
+                <table class="table">
+                    <center>
+                        <img src="./write_up/emir_edge.jpg" height="200px">
+                        <p>Blue Edges</p>
+                    </center>
+                    <tr>
+                        <td>
+                            <center>
+                                <img src="./base_results/emir.jpg" height="450px">
+                                <p><b>Before</b></p>
+                            </center>
+                        </td>
+                        <td>
+                            <center>
+                                <img src="./edge_detection_results/emir.jpg" height="450px">
+                                <p><b>After</b></p>
+                            </center>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="col-lg-12">
+                <h2 class="page-header">Post-Processing</h2>
+                <hr>
+                <p><b>Automatic Cropping:</b> After the RGB images negatives are aligned, an automatic cropping function removes extraneous borders conservatively.
+                    First, extract the saturation level of an image and apply a threshold map. For every pixel larger than 0.93 in value turn it into a 1, otherwise 0.
+                    Then mark off 10% of image borders to analyze for speedup. Going from the middle of the image outwards find the first row/column where the ratio of white
+                    pixels to the total pixels is greater than 13%. Mark those locations as ones to be cropped off.
+                </p>
+                <center>
+                    <img src="./edge_detection_results/ikonostas.jpg" height="300px">
+                    <img src="./write_up/ikonostas_border.jpg" height="300px">
+                    <img src="./auto_cropped/ikonostas.jpg" height="300px">
+                </center>
+                <br>
+                <br>
+                <p><b>White Balancing:</b> After the border is cropped, a white balancing algorithm takes over to enhance the original color image. 
+                    Assume that the average color or the brightest color is the illuminant and shift those to white.</p>
+                <center>
+                    <img src="./edge_detection_results/icon.jpg" height="300px">
+                    <img src="./white_balanced/icon.jpg" height="300px">
+                </center>
+                <br/>
+            </div>
+
+            <div class="col-lg-12">
+                <h2 class="page-header">Gallery</h2>
+            </div>
+
+            <center>
+                <table class="table">
+                    <tr>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/cathedral.jpg" height="250px">
+                                <p><b>Offset:</b> R:(0, 24), G:(5, 2)</p>
+                            </center>
+                        </td>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/church.jpg" height="250px">
+                                <p><b>Offset:</b> R:(86, -2), G:(35, 2)</p>
+                            </center>
+                        </td>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/cotton.jpg" height="250px">
+                                <p><b>Offset:</b> R:(118, -14), G:(55, -5)</p>
+                            </center>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/emir.jpg" height="250px">
+                                <p><b>Offset:</b> R:(107, 40), G:(49, 23)</p>
+                            </center>
+                        </td>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/harvesters.jpg" height="250px">
+                                <p><b>Offset:</b> R:(123, 15), G:(60, 18)</p>
+                            </center>
+                        </td>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/icon.jpg" height="250px">
+                                <p><b>Offset:</b> R:(88, 22), G:(38, 16)</p>
+                            </center>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/ikonostas.jpg" height="250px">
+                                <p><b>Offset:</b> R:(97, -27), G:(37, -4)</p>
+                            </center>
+                        </td>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/kamen.jpg" height="250px">
+                                <p><b>Offset:</b> R:(59, 44), G:(23, 29)</p>
+                            </center>
+                        </td>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/lady.jpg" height="250px">
+                                <p><b>Offset:</b> R:(120, 13), G:(57, 9)</p>
+                            </center>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/monastery.jpg" height="250px">
+                                <p><b>Offset:</b> R:(3, 2), G:(-3, 2)</p>
+                            </center>
+                        </td>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/napoleon.jpg" height="250px">
+                                <p><b>Offset:</b> R:(132, -2), G:(64, 4)</p>
+                            </center>
+                        </td>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/nativity.jpg" height="250px">
+                                <p><b>Offset:</b> R:(8, 0), G:(3, 1)</p>
+                            </center>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/self_portrait.jpg" height="250px">
+                                <p><b>Offset:</b> R:(171, 49), G:(77, 29)</p>
+                            </center>
+                        </td>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/settlers.jpg" height="250px">
+                                <p><b>Offset:</b> R:(14, -1), G:(7, 0)</p>
+                            </center>
+                        </td>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/village.jpg" height="250px">
+                                <p><b>Offset:</b> R:(138, 22), G:(67, 13)</p>
+                            </center>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/three_generations.jpg" height="250px">
+                                <p><b>Offset:</b> R:(111, 8), G:(55, 12)</p>
+                            </center>
+                        </td>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/train.jpg" height="250px">
+                                <p><b>Offset:</b> R:(85, 29), G:(40, 8)</p>
+                            </center>
+                        </td>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/tserkov.jpg" height="250px">
+                                <p><b>Offset:</b> R:(139, 40), G:(60, 31)</p>
+                            </center>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <center>
+                                <img src="./auto_cropped/turkmen.jpg" height="250px">
+                                <p><b>Offset:</b> R:(93, 7), G:(43, 10)</p>
+                            </center>
+                        </td>
+                    </tr>
+                </table>
+            </center>
+            <hr>
+            <footer>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <center><p>Copyright &copy; Genevieve Tran 2017</p></center>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <script src="js/jquery.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+    </body>
+</html>
