@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>CS 194-26 Project 1: Images of the Russian Empire</title>
+        <title>CS 194-26 Project 2: Building a Pinhole Camera</title>
 
         <link href="css/web.css" rel="stylesheet">
         <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -23,30 +23,22 @@
             <div class="col-lg-12">
                 <center >
                     <br>
-                    <h1 >Project 1: Images of the Russian Empire</h1>
-                    <i>Colorizing the Prokudin-Gorskii photo collection</i>
-                    <h3 class="page-header">Genevieve Tran</h3>
+                    <h1 >CS 194-26 Project 2: Building a Pinhole Camera</h1>
+                    <!-- <i>Colorizing the Prokudin-Gorskii photo collection</i> -->
+                    <h3 class="page-header">Edward Fang (cs194-26-), Genevieve Tran (cs194-26-), Jeffrey Wang (cs194-26-acl)</h3>
                     <img src="./write_up/lady.jpg" height="400px">
                     <hr>
                 </center>
             </div>
 
             <div class="col-lg-12">
-                <h2 class="page-header">Goal</h2>
-                <p>Prokudin-Gorskii's glass plate negatives contain the pixel values for red, green, and blue (RGB). 
-                    These plates contain the images of the Russian Empire from the early 1900's. 
-                    The goal of this project is to convert the original negatives into colored images. 
-                    This process involves aligning the three images using Sum of Squared Differences (SSD) and/or 
-                    Normalized Cross-Correlation (NCC). If the size of the image is particularly large, I used the image
-                    pyramid algorithm to recursively find best alignments on smaller versions of the image, updating the search window and
-                    displacement at each step as the image gets larger.
-                    In addition, edge detection is used to further fine-tune the alignment of the negatives (instead of just raw pixels).
-                    After alignment, I performed automatic cropping and white-balancing of teh image.</p>
-                <p><b>Bells and Whistles:</b> Automatic Cropping, Edge Detection for better features and White Balancing</p>
+                <h2 class="page-header">Overview</h2>
+                <p>In this project, we created a simple camera obscura through the use of a shoebox and cardstock paper. The idea is to create an enclosed compartment in which light may only enter through a small hole (the pinhole). Any light entering the hole shall project over a white "backdrop" resulting in a display of an inverted image of wherever the whole was facing. </p>
+                <p><b>Bells and Whistles:</b> </p>
             </div>
             <br>
             <div class="col-lg-12">
-                <h2 class="page-header">Image Alignment</h2>
+                <h2 class="page-header">Box-Building</h2>
                 <hr>
                 <center>
                     <img src="./base_results/emir.jpg" height="300px">
