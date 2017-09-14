@@ -24,9 +24,7 @@
                 <center >
                     <br>
                     <h1 >CS 194-26 Project 2: Building a Pinhole Camera</h1>
-                    <!-- <i>Colorizing the Prokudin-Gorskii photo collection</i> -->
-                    <h3 class="page-header">Edward Fang (cs194-26-adf), Genevieve Tran (cs194-26-aeo), Jeffrey Wang (cs194-26-acl)</h3>
-                    <img src="./write_up/lady.jpg" height="400px">
+                    <i>Edward Fang (cs194-26-adf), Genevieve Tran (cs194-26-aeo), Jeffrey Wang (cs194-26-acl)</i>
                     <hr>
                 </center>
             </div>
@@ -34,7 +32,7 @@
             <div class="col-lg-12">
                 <h2 class="page-header">Overview</h2>
                 <p>In this project, we created a simple camera obscura through the use of a shoebox and cardstock paper. The idea is to create an enclosed compartment in which light may only enter through a small hole (the pinhole). Any light entering the hole shall project over a white "backdrop" resulting in a display of an inverted image of wherever the whole was facing. </p>
-                <p><b>Bells and Whistles:</b> </p>
+                <p><b>Bells and Whistles: Light Painting </b> </p>
             </div>
             <br>
             <div class="col-lg-12">
@@ -43,7 +41,31 @@
                 <center>
                     <img src="./images/building/initial.jpg" height="300px">
                     <img src="./images/building/inside.jpg" height="300px">
-                    <img src="./images/building/final.jpg" height="300px">
+                </center>
+                <center> 
+                    Our first attempt at a camera obscura. <br><br>
+                </center>
+                <center>
+                    <img src="./images/building/final.jpg" height="250px">
+                    <img src="./images/building/setup.jpg" height="250px">                    
+                    <img src="./images/building/woops.jpg" height="250px">
+                </center>
+                <center>
+                    Our completed camera obscura, plus when we realized the ISO was off. <br><br>
+                </center>
+                <center>
+                    <img src="./images/camera/camera.jpg" height="300px">
+                    <img src="./images/camera/lens.jpg" height="300px">
+                </center>
+                <center>
+                    Our camera model. Settings for each pinhole size were as follows:
+                    <br>
+                    1mm: 30sec, f1.8, L1.0 ISO;
+                    <br>
+                    3mm: 30sec, f2.8, L1.0 ISO;
+                    <br>
+                    5mm: 30sec, f4, L1.0 ISO;
+                    <br><br>
                 </center>
                 <br>
                 <b>Approach:</b>
@@ -56,14 +78,50 @@
                 <p>
                     Unfortunately, the pictures on our newly designed Camera Obscura V2 didn't turn out so well, either, and still maintained a purple hue. We tried several different things to ensure our result would not have the purple hue. This including taping down the black paper even more, double layering the white printer paper, and switching our pinhole card with white cardstock from a used macaron container instead of the black cardstock we originally had. Our understanding was that, as light entered through the black pinhole, some of the light rays were being absorbed by the black card paper, thereby reducing the resultant image's colouration, leaving it with a purple hue. We assumed that the purple hue was the result of light of the purple wavelength managing to pass through the paper while other light did not.
                 </p>
+                <p>
                     The results from doing the combination of improvements did seem to decrease the hue a significant amount, although by then our resulting images still didn't seem to be catching the scenery of interest. We played around a bit more with the camera, and it turned out our ISO was set a bit too high. After tweaking that, we were able to get more solid images.
                 </p>
-                <p><b>Better Features aka Bells and Whistles 1:</b> In addition to using the image pyramid technique for faster alignment on TIFF images, edge detection is used to enhance the alignment mechanism. 
-                    First transform an image into an images of edges through the Canny edge detection algorithm. That gives a clear contrast outline of the original image. 
-                    Then run the original pyramid algorithm on these new features.</p>
+                <center>
+                    Our results, in 2x2 grids following this order: original, 1mm, 3mm, 5mm.
+                </center>
+                <center>
+                    <img src="./images/results/original_car.JPG" height="300px">
+                    <img src="./images/results/1mm_car.JPG" height="300px">
+                    <img src="./images/results/3mm_car.JPG" height="300px">
+                    <img src="./images/results/5mm_car.JPG" height="300px">
+                </center>
+                <center>
+                    <img src="./images/results/original_flower.JPG" height="300px">
+                    <img src="./images/results/1mm_flower.JPG" height="300px">
+                    <img src="./images/results/3mm_flower.JPG" height="300px">
+                    <img src="./images/results/5mm_flower.JPG" height="300px">
+                </center>
+                <br><br>
+                <center>
+                    Our shots taken using the "good pinhole", which we found to be 3mm. From our samples, we saw that the smaller pinhole (1mm) let in too little light, and our resultant image would catch more of the inside of the box itself rather than the projected image, and for the larger pinhole (5mm) we would get an image, but it would be a bit blurry from letting too much light in.
+                </center>
+                <center>
+                    <img src="./images/results/original_sky.JPG" height="300px">
+                    <img src="./images/results/3mm_sky.JPG" height="300px">
+                </center>
+                <center>
+                    <img src="./images/results/original_stairs.JPG" height="300px">
+                    <img src="./images/results/3mm_stairs.JPG" height="300px">
+                </center>
+                <center>
+                    <img src="./images/results/original_twocars.JPG" height="300px">
+                    <img src="./images/results/3mm_twocars.JPG" height="300px">
+                </center>
+                <center>
+                    <img src="./images/results/original_wall.JPG" height="300px">
+                    <img src="./images/results/3mm_wall.JPG" height="300px">
+                </center>
+                <br><br>
+                <p><b>Bells and Whistles 1:</b> 
                 </p>
-                <p><center><b>Canny Edge Detection and Pyramid Algorithm</b></center></p>
-                <table class="table">
+                </p>
+                <p><center><b>Light Painting</b></center></p>
+                <!-- <table class="table">
                     <center>
                         <img src="./write_up/emir_edge.jpg" height="200px">
                         <p>Blue Edges</p>
@@ -82,10 +140,10 @@
                             </center>
                         </td>
                     </tr>
-                </table>
+                </table> -->
             </div>
 
-            <div class="col-lg-12">
+            <!-- <div class="col-lg-12">
                 <h2 class="page-header">Post-Processing</h2>
                 <hr>
                 <p><b>Automatic Cropping:</b> After the RGB images negatives are aligned, an automatic cropping function removes extraneous borders conservatively.
@@ -107,13 +165,13 @@
                     <img src="./white_balanced/icon.jpg" height="300px">
                 </center>
                 <br/>
-            </div>
+            </div> -->
 
-            <div class="col-lg-12">
+            <!-- <div class="col-lg-12">
                 <h2 class="page-header">Gallery</h2>
-            </div>
+            </div> -->
 
-            <center>
+            <!-- <center>
                 <table class="table">
                     <tr>
                         <td>
@@ -244,12 +302,12 @@
                         </td>
                     </tr>
                 </table>
-            </center>
+            </center> -->
             <hr>
             <footer>
                 <div class="row">
                     <div class="col-lg-12">
-                        <center><p>Copyright &copy; Genevieve Tran 2017</p></center>
+                        <center><p>Copyright &copy; Jeffrey Wang, Genevieve Tran, Edward Fang 2017</p></center>
                     </div>
                 </div>
             </footer>
