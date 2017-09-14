@@ -25,7 +25,7 @@
                     <br>
                     <h1 >CS 194-26 Project 2: Building a Pinhole Camera</h1>
                     <!-- <i>Colorizing the Prokudin-Gorskii photo collection</i> -->
-                    <h3 class="page-header">Edward Fang (cs194-26-), Genevieve Tran (cs194-26-), Jeffrey Wang (cs194-26-acl)</h3>
+                    <h3 class="page-header">Edward Fang (cs194-26-adf), Genevieve Tran (cs194-26-aeo), Jeffrey Wang (cs194-26-acl)</h3>
                     <img src="./write_up/lady.jpg" height="400px">
                     <hr>
                 </center>
@@ -41,32 +41,23 @@
                 <h2 class="page-header">Box-Building</h2>
                 <hr>
                 <center>
-                    <img src="./base_results/emir.jpg" height="300px">
-                    <img src="./base_results/settlers.jpg" height="200px">
-                    <img src="./base_results/kamen.jpg" height="250px">
+                    <img src="./images/building/initial.jpg" height="300px">
+                    <img src="./images/building/inside.jpg" height="300px">
+                    <img src="./images/building/final.jpg" height="300px">
                 </center>
                 <br>
                 <b>Approach:</b>
                 <p> 
-                    First I attempted implementing the suggested solution on raw pixels of each color channel.
-                    Single scale alignment algorithms are Sum of Squared Differences (SSD) and Normalized Cross-Correlation (NCC). 
+                    We first attempted building the camera obscura through the use of a shoebox, layering the insides with black cardstock, and creating pinholes of size 1mm, 3mm, and 5mm. We used white printer paper on the inside as a screen. We also lined the outsides with black paper and taped them down, too. Creating holes sizeable enough for the pinholes and the camera lens.
                 </p>
                 <p>
-                    Sum of Squared Differences (SSD): minimize sum(sum((image1-image2).^2)), over the displacement values for x and y in range of [-15, 15] between a blue and a red or green channel.
+                    Our initial images didn't turn out too well, and left us with a strong purple hue. We had suspected several possible reasons as to why this occurred, one of which was the fact that the shoebox we had used was of a pastel pink colour. For this reason, we decided to switch to a cardboard Amazon box instead, and remade our camera obscura. 
                 </p>
                 <p>
-                    Normalized Cross-Correlation (NCC): maximize (image1./||image1|| and image2./||image2||), over the displacement values for x and y in range of [-15, 15]  between a blue and a red or green channel.
+                    Unfortunately, the pictures on our newly designed Camera Obscura V2 didn't turn out so well, either, and still maintained a purple hue. We tried several different things to ensure our result would not have the purple hue. This including taping down the black paper even more, double layering the white printer paper, and switching our pinhole card with white cardstock from a used macaron container instead of the black cardstock we originally had. Our understanding was that, as light entered through the black pinhole, some of the light rays were being absorbed by the black card paper, thereby reducing the resultant image's colouration, leaving it with a purple hue. We assumed that the purple hue was the result of light of the purple wavelength managing to pass through the paper while other light did not.
                 </p>
-                    For negatives that were in the TIFF format, a faster search procedure is done using image pyramids. 
-                    An image pyramid represents the image at multiple scales (usually scaled by a factor of 2) and the processing is done 
-                    sequentially starting from the coarsest scale (smallest image) and going down the pyramid, 
-                    updating the offset values with each proceeding layer. At each level, the Normalized Cross-Correlation
-                    is calculated with a window range of int(np.log2(curr_rows or curr_columns)) at the smallest scale and a range of int(np.log2(curr_rows or curr_columns)/2) for every successive layer. 
-                    Curr_rows or curr_columns is also an important distinction as the window for a column displacement should not be the same as the one for a row displacement.
-                    These numbers were chosen analytically as well as through trial and error.
-                    The number of levels was determined through int(round(np.log10(rows))), where rows is the # of rows in the original image.
-                    The idea is that the coarsest level will provide the general location of optimal alignment and each successive level will 
-                    merely update in its vicinity to determine if a more optimal, local position can be found.</p>
+                    The results from doing the combination of improvements did seem to decrease the hue a significant amount, although by then our resulting images still didn't seem to be catching the scenery of interest. We played around a bit more with the camera, and it turned out our ISO was set a bit too high. After tweaking that, we were able to get more solid images.
+                </p>
                 <p><b>Better Features aka Bells and Whistles 1:</b> In addition to using the image pyramid technique for faster alignment on TIFF images, edge detection is used to enhance the alignment mechanism. 
                     First transform an image into an images of edges through the Canny edge detection algorithm. That gives a clear contrast outline of the original image. 
                     Then run the original pyramid algorithm on these new features.</p>
